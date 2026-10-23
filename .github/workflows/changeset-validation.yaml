@@ -3,7 +3,7 @@ on:
 
 jobs:
   validate-changesets:
-    runs-on: compiler-8cpu
+    runs-on: compiler-4cpu
 
     steps:
       - name: checkout
