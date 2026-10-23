@@ -43,12 +43,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - builder: hive-linux-x64-ubuntu2204
+          - builder: compiler-8cpu
             platform: linux/amd64
             suffix: '-amd64'
-          - builder: hive-linux-arm64-ubuntu2204
-            platform: linux/arm64
-            suffix: '-arm64'
     runs-on: ${{ matrix.builder }}
     name: dockerize (${{ matrix.platform }})
     env:
@@ -146,37 +143,6 @@ jobs:
           path: |
             release-assets/hive-cdn-cloudflare-worker.zip
             release-assets/hive-cdn-aws-lambda.zip
-
-      - name: upload artifact
-        if: ${{ inputs.uploadJavaScriptArtifacts }}
-        uses: randomairborne/r2-release@9cbc35a2039ee2ef453a6988cd2a85bb2d7ba8af # v1.0.2
-        with:
-          endpoint: https://6d5bc18cd8d13babe7ed321adba3d8ae.r2.cloudflarestorage.com
-          accesskeyid: ${{ secrets.R2_ACCESS_KEY_ID }}
-          secretaccesskey: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          bucket: hive-js-build-artifacts
-          file: ${{ github.workspace }}/${{ inputs.imageTag }}.zip
-          destination: ${{ inputs.imageTag }}.zip
-
-      - name: upload app persisted documents artifact
-        uses: randomairborne/r2-release@9cbc35a2039ee2ef453a6988cd2a85bb2d7ba8af # v1.0.2
-        with:
-          endpoint: https://6d5bc18cd8d13babe7ed321adba3d8ae.r2.cloudflarestorage.com
-          accesskeyid: ${{ secrets.R2_ACCESS_KEY_ID }}
-          secretaccesskey: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          bucket: hive-js-build-artifacts
-          file: ${{ github.workspace }}/packages/web/app/src/gql/persisted-documents.json
-          destination: ${{ inputs.imageTag }}.app.documents.json
-
-      - name: upload graphql schema
-        uses: randomairborne/r2-release@9cbc35a2039ee2ef453a6988cd2a85bb2d7ba8af # v1.0.2
-        with:
-          endpoint: https://6d5bc18cd8d13babe7ed321adba3d8ae.r2.cloudflarestorage.com
-          accesskeyid: ${{ secrets.R2_ACCESS_KEY_ID }}
-          secretaccesskey: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          bucket: hive-js-build-artifacts
-          file: ${{ github.workspace }}/schema.graphql
-          destination: ${{ inputs.imageTag }}.schema.graphqls
 
       - name: configure docker buildx
         if: ${{ inputs.dockerize }}
@@ -345,7 +311,7 @@ jobs:
               image_name="$REGISTRY/$IMAGE_NAME/$target:$IMAGE_TAG"
               echo "image name: $image_name"
 
-              docker manifest create $image_name --amend "$image_name-arm64" --amend "$image_name-amd64"
+              docker manifest create $image_name --amend "$image_name-amd64"
               docker manifest push $image_name
           done
 
@@ -376,7 +342,7 @@ jobs:
               image_name="$REGISTRY/$IMAGE_NAME/$target:$IMAGE_TAG"
               echo "image name: $image_name"
 
-              docker manifest create $image_name --amend "$image_name-arm64" --amend "$image_name-amd64"
+              docker manifest create $image_name --amend "$image_name-amd64"
               docker manifest push $image_name
           done
 
@@ -422,6 +388,6 @@ jobs:
               image_name="$REGISTRY/$IMAGE_NAME/$target:latest"
               echo "image name: $image_name"
 
-              docker manifest create $image_name --amend "$image_name-arm64" --amend "$image_name-amd64"
+              docker manifest create $image_name --amend "$image_name-amd64"
               docker manifest push $image_name
           done
