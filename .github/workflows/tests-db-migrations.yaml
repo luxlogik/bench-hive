@@ -3,7 +3,7 @@ on:
 
 jobs:
   db-migrations:
-    runs-on: ubuntu-22.04
+    runs-on: compiler-8cpu
 
     services:
       postgres:

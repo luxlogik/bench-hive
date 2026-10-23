@@ -3,7 +3,7 @@ on:
 
 jobs:
   validate-changesets:
-    runs-on: ubuntu-22.04
+    runs-on: compiler-8cpu
 
     steps:
       - name: checkout

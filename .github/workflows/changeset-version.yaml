@@ -7,7 +7,7 @@ on:
 
 jobs:
   changeset-version:
-    runs-on: ubuntu-22.04
+    runs-on: compiler-8cpu
     outputs:
       version: ${{ steps.package-version.outputs.version }}
 

@@ -283,7 +283,7 @@ jobs:
     if:
       ${{ inputs.uploadJavaScriptArtifacts && inputs.publishLatest && github.ref_type == 'tag' &&
       github.ref_name == format('hive@{0}', inputs.latestVersion) }}
-    runs-on: ubuntu-22.04
+    runs-on: compiler-8cpu
     permissions:
       contents: write
     steps:
@@ -305,7 +305,7 @@ jobs:
 
   publish_docker_manifest:
     needs: build-and-dockerize
-    runs-on: ubuntu-22.04
+    runs-on: compiler-8cpu
     if: ${{ inputs.dockerize }}
     name: publish multiarch manifest
     steps:

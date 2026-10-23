@@ -21,7 +21,7 @@ on:
 
 jobs:
   integration:
-    runs-on: ubuntu-22.04
+    runs-on: compiler-8cpu
     name: integration (${{ matrix.shardIndex }})
     strategy:
       fail-fast: false
