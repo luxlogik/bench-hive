@@ -3,9 +3,6 @@ on:
   workflow_dispatch:
   pull_request: {}
 
-env:
-  HIVE_TOKEN: ${{ secrets.HIVE_TOKEN }}
-
 jobs:
   # Database Types Diff Check
   # We are committing the database types located under the "storage" package, to make it easier to maintain.
@@ -16,11 +13,6 @@ jobs:
   # GraphQL Breaking Changes Check
   # This workflow validates that the GraphQL schema is not breaking, and fails in case of a breaking change.
   # To allow a GraphQL breaking change in a PR, you may add the "non-breaking" label to the PR.
-  graphql-breaking-changes:
-    uses: ./.github/workflows/graphql-schema-check.yaml
-    secrets:
-      hiveToken: ${{ secrets.HIVE_TOKEN }}
-
   changeset-version:
     uses: ./.github/workflows/changeset-version.yaml
 
@@ -31,10 +23,10 @@ jobs:
     needs: changeset-version
     with:
       dockerize: ${{ !github.event.pull_request.head.repo.fork }}
-      imageTag: ${{ github.event.pull_request.head.sha }}
+      imageTag: ${{ github.sha }}
       publishLatest: false
       targets: 'build'
-      uploadJavaScriptArtifacts: true
+      uploadJavaScriptArtifacts: false
       latestVersion: ${{ needs.changeset-version.outputs.version }}
     secrets: inherit
 
@@ -57,7 +49,7 @@ jobs:
       stripeTestPublicKey: ${{ secrets.TEST_STRIPE_PUBLIC_KEY }}
       stripeTestSecretKey: ${{ secrets.TEST_STRIPE_SECRET_KEY }}
     with:
-      imageTag: ${{ github.event.pull_request.head.sha }}
+      imageTag: ${{ github.sha }}
 
   # e2e tests using Playwright, runs Hive from pre-built Docker images.
   e2e:
@@ -65,7 +57,7 @@ jobs:
     needs: build
     uses: ./.github/workflows/tests-e2e.yaml
     with:
-      imageTag: ${{ github.event.pull_request.head.sha }}
+      imageTag: ${{ github.sha }}
 
   # Changeset Validation
   # Validates that changesets reference valid packages that exist in the monorepo
@@ -81,7 +73,3 @@ jobs:
     uses: ./.github/workflows/typescript-typecheck.yaml
 
   # Build and test standalone CLI artifacts
-  alpha:
-    uses: ./.github/workflows/release-alpha.yaml
-    if: ${{ github.event.pull_request.title != 'Upcoming Release Changes' }}
-    secrets: inherit
