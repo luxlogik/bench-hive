@@ -368,7 +368,7 @@ jobs:
               base_image="$REGISTRY/$IMAGE_NAME/$target:${IMAGE_TAG}"
               echo "image name: $image_name"
 
-              docker manifest create $image_name --amend "${base_image}-arm64" --amend "${base_image}-amd64"
+              docker manifest create $image_name --amend "${base_image}-amd64"
               docker manifest push $image_name
           done
 
