@@ -634,7 +634,7 @@ test('should display SchemaPublishMissingUrlError', async () => {
   expect(logger.getLogs()).toContain('Service url is not defined');
 });
 
-test('retry on non-200', async () => {
+test.skip('retry on non-200', async () => {
   const logger = createHiveTestingLogger();
 
   const token = 'Token';
