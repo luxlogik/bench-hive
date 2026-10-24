@@ -10,9 +10,6 @@ jobs:
   db-types:
     uses: ./.github/workflows/db-types-diff.yaml
 
-  # GraphQL Breaking Changes Check
-  # This workflow validates that the GraphQL schema is not breaking, and fails in case of a breaking change.
-  # To allow a GraphQL breaking change in a PR, you may add the "non-breaking" label to the PR.
   changeset-version:
     uses: ./.github/workflows/changeset-version.yaml
 
@@ -71,5 +68,3 @@ jobs:
   # TypeScript Typecheck and compiler checks
   typescript:
     uses: ./.github/workflows/typescript-typecheck.yaml
-
-  # Build and test standalone CLI artifacts
