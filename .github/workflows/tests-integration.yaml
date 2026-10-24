@@ -80,6 +80,11 @@ jobs:
         id: cpu-cores
         uses: SimenB/github-actions-cpu-cores@97ba232459a8e02ff6121db9362b09661c875ab8 # v2
 
+      - name: login to ghcr (images pushed by this mirror's build job are private packages)
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "$GHCR_TOKEN" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
       - name: run containers
         timeout-minutes: 8
         env:
