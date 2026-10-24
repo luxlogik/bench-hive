@@ -42,6 +42,11 @@ jobs:
         with:
           cmd: yq -i 'del(.services.*.volumes)' docker/docker-compose.community.yml
 
+      - name: login to ghcr (images pushed by this mirror's build job are private packages)
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "$GHCR_TOKEN" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
       - name: run containers
         timeout-minutes: 10
         run: |
